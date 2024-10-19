@@ -27,7 +27,7 @@ export const config = {
 
 admin/viewuser endpointini özel olarak protected yapmak için
 
-```bash
+```js
 import { getSession } from "@/utils/getSession";
 import { notFound } from "next/navigation";
 
