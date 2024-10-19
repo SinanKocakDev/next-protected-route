@@ -9,7 +9,7 @@ Not: Bunun için nextjs'in middleware.js dosyasını projenin kök dizininde olm
 Middleware'daki config nesnesini aşağıdaki gibi yapabilirsin.
 böylece istediğin route ' a özel protected ayarlayabilirsin.
 
-```bash
+```js
 export const config = {
   matcher: [
     /*
