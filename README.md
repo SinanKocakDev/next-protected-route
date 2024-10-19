@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Bu projede next ile korulamalı route'lar oluşturulmuştur.
 
-## Getting Started
+utils klasöründe geçiçi bir session oluşturulmuştur.
+Oluşturulan bu session göre anasayfada oluşturulan endpointlere erişim sağlanmaktadır.
 
-First, run the development server:
+Not: Bunun için nextjs'in middleware.js dosyasını projenin kök dizininde olmalıdır.
+
+
+Middleware'daki config nesnesini aşağıdaki gibi yapabilirsin.
+böylece istediğin route ' a özel protected ayarlayabilirsin.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+}
+```
+örnek vermek gerekirse ..
+
+admin/viewuser endpointini özel olarak protected yapmak için
+
+```bash
+import { getSession } from "@/utils/getSession";
+import { notFound } from "next/navigation";
+
+const ViewUser = async () => {
+    const session = await getSession();
+    if(session.role !== "admin") {
+        notFound()
+    }
+  return <div>List All View User </div>
+}
+
+export default ViewUser
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ayrıca session'da oluşuturulan role ile admin ise şu route'a erişim izni değilse şu route'a erişemez şeklinde işlemler vardır.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+19.10.2024
